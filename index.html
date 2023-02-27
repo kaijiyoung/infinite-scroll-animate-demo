@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .out {
+        width: 200px;
+        height: 500px;
+        background: gray;
+        overflow: hidden;
+      }
+      .item {
+        width: 100%;
+        height: 30px;
+        text-align: center;
+        color: white;
+      }
+      .item.i0 {
+        background: blue;
+      }
+      .item.i1 {
+        background: rgb(111, 111, 134);
+      }
+      .item.i2 {
+        background: rgba(115, 255, 0, 0.753);
+      }
+      .item.i3 {
+        background: rgb(161, 190, 54);
+      }
+      .item.i4 {
+        background: rgb(221, 142, 52);
+      }
+      .item.i5 {
+        background: rgb(233, 40, 175);
+      }
+      .item.i6 {
+        background: rgb(56, 141, 221);
+      }
+      .item.i7 {
+        background: rgb(241, 39, 191);
+      }
+      .item.i8 {
+        background: rgb(25, 45, 156);
+      }
+      .item.i9 {
+        background: blue;
+      }
+      .item.i10 {
+        background: rgb(238, 170, 115);
+      }
+      .item.i11 {
+        background: rgb(61, 211, 69);
+      }
+      .item.i12 {
+        background: rgb(182, 102, 88);
+      }
+      .item.i13 {
+        background: rgb(2, 2, 17);
+      }
+      .item.i14 {
+        background: rgb(60, 151, 7);
+      }
+      .item.i15 {
+        background: rgb(233, 40, 175);
+      }
+      .item.i16 {
+        background: rgb(56, 141, 221);
+      }
+      .item.i17 {
+        background: rgb(241, 39, 191);
+      }
+      .item.i18 {
+        background: rgb(25, 45, 156);
+      }
+      .item.i19 {
+        background: rgb(61, 211, 69);
+      }
+      .item.i20 {
+        background: rgb(2, 2, 17);
+      }
+    </style>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <div class="out">
+        <div
+          ref="itemRef"
+          :class="['item', 'i' + item.id]"
+          v-for="(item, index) in domList"
+          :key="index"
+        >
+          {{ item.id }}
+        </div>
+      </div>
+    </div>
+    <script>
+      const { createApp, defineComponent, onMounted, ref } = Vue
+      
+      const component = defineComponent({
+        setup() {
+          // 时序函数指针
+          let reqId = null
+
+          // 内容列表
+          const domList = ref([])
+
+          // 内容数组dom引用
+          const itemRef = ref()
+
+          // 初始化20条内容
+          for (let i = 0; i < 20; i++) {
+            domList.value.push({
+              id: i,
+            })
+          }
+
+          // 页面就绪，开始动画
+          onMounted( draw )
+
+          // 无限滚动实现
+          function draw() {
+            const dom = itemRef.value[0]
+            if (!dom.style.marginTop) {
+              dom.style.marginTop = '0px'
+            }
+            dom.style.marginTop = `${parseInt(dom.style.marginTop) - 1}px`
+            if (parseInt(dom.style.marginTop) === -30) {
+              domList.value.push(domList.value[0])
+              domList.value.shift()
+              dom.style.marginTop = '0px'
+            }
+            reqId = requestAnimationFrame(draw)
+          }
+          return {
+            domList,
+            itemRef
+          }
+        }
+      })
+      createApp(component).mount('#app')
+    </script>
+  </body>
+</html>
